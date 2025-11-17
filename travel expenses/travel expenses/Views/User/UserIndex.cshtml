@@ -1,0 +1,385 @@
+﻿@*@{
+        ViewBag.Title = "UserIndex";
+    }
+
+    <h2>UserIndex</h2>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <lable>Id</lable>
+    <br>
+    <input type="text" id="txtId" placeholder="id"disabled />
+    <br>
+    <lable>Name</lable>
+    <br>
+    <input type="text" id="txtName" placeholder="Name" />
+    <br>
+    <lable>EmpId</lable>
+    <br>
+    <input type="text" id="txtEmpId" placeholder="EmpId" />
+    <br>
+    <lable>UserId</lable>
+    <br>
+    <input type="text" id="txtUserId" placeholder="UserId" />
+
+    <br>
+    <lable>password</lable>
+    <br>
+    <input type="text" id="txtpassword" placeholder="password" />
+
+    <br>
+    <lable>status</lable>
+    <br>
+    <input type="text" id="txtstatus" placeholder="status" />
+
+    <button type="submit" id="btnsave" onclick="SaveData()">Submit</button>
+    <button type="submit" id="btnUpdate" onclick="UpdateUser()">Update</button>
+    <br>
+    <button type="submit" id="btnGet" onclick="GetUser()">GetUserData</button>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>EmpId</th>
+                <th>UserId</th>
+                <th>Password</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="tdata"></tbody>
+    </table>
+    <script>
+        function SaveData() {
+            let Id = 0; /*$('#txtId').val();*/
+            let Name = $('#txtName').val();
+            let EmpId = $('#txtEmpId').val();
+            let UserId = $('#txtUserId').val();
+            let Passwords = $('#txtpassword').val();
+            let Status = $('#txtstatus').val();
+            $.ajax({
+                type: 'GET',
+                url: '/User/SaveUser',
+                datatype: 'Json',
+                data: { Id, Name, EmpId, UserId, Passwords, Status },
+                success: function (data) {
+                    if (data > 0) {
+                        alert("record Save");
+                    }
+
+                }
+
+            });
+
+        }
+        function GetUser()
+        {
+            $('#tdata').empty();
+            $.ajax({
+
+                    type: 'GET',
+                    url: '/User/GetUser',
+                    datatype: 'Json',
+                    success: function (data)
+                    {
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            var items = "<tr><td>" + data[i].Id + "</td><td>" + data[i].Name + "</td><td>" + data[i].EmpId + "</td><td>" + data[i].UserId + "</td><td>" + data[i].Passwords + "</td><td>" + data[i].Status + "</td><td><button onclick='EditUSer(" + data[i].Id + ")'>Edit</button></td></td><td><button onclick='Userdeletedata(" + data[i].Id + ")'>delete</button></td></tr>"
+                            $('#tdata').append(items);
+
+                        }
+
+
+                    }
+            })
+        }
+        function EditUSer(Id) {
+            $.ajax({
+                type: 'GET',
+                url: '/User/EditUser',
+                datatype: 'Json',
+                data: { id: Id },
+                success: function (data) {
+
+                   $('#txtId').val(data.Id);
+                    $('#txtName').val(data.Name);
+                    $('#txtEmpId').val(data.EmpId);
+                   $('#txtUserId').val(data.UserId);
+                     $('#txtpassword').val(data.Passwords);
+                    $('#txtstatus').val(data.Status);
+                }
+            })
+        }
+        function UpdateUser() {
+            let Id = $('#txtId').val();
+            let Name = $('#txtName').val();
+            let EmpId = $('#txtEmpId').val();
+            let UserId = $('#txtUserId').val();
+            let Passwords = $('#txtpassword').val();
+            let Status = $('#txtstatus').val();
+            $.ajax({
+                type: 'GET',
+                url: '/User/updateUser',
+                datatype: 'Json',
+                data: { Id,Name, EmpId, UserId, Passwords, Status },
+                success: function (data) {
+                    if (data > 0) {
+                        alert("record Update");
+                    }
+
+                }
+
+            })
+        }
+
+    </script>*@
+@{
+    ViewBag.Title = "UserIndex";
+}
+<h2 style="text-align: center; margin-bottom: 20px;">User Management</h2>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f7fa;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 6px 0 15px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 16px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    .button-group {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+    }
+
+        table th,
+        table td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+    .action-buttons button {
+        margin: 2px;
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="form-container">
+    <label>Id</label>
+    <input type="text" id="txtId" placeholder="Id" disabled />
+    <br />
+    <label>Name</label>
+    <input type="text" id="txtName" placeholder="Name" />
+    <br />
+    <label>EmpId</label>
+    <input type="text" id="txtEmpId" placeholder="EmpId" />
+    <br />
+    <label>UserId</label>
+    <input type="text" id="txtUserId" placeholder="UserId" />
+    <br />
+    <label>Password</label>
+    <input type="password" id="txtpassword" placeholder="Password" />
+    <br />
+    <label>Status</label>
+    <input type="text" id="txtstatus" placeholder="Status" />
+
+    <div class="button-group">
+        <button type="button" onclick="SaveData()">Submit</button>
+        <button type="button" onclick="UpdateUser()">Update</button>
+        <button type="button" onclick="GetUser()">Get User Data</button>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>EmpId</th>
+            <th>UserId</th>
+            <th>Password</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="tdata"></tbody>
+</table>
+
+
+<script>
+    function SaveData() {
+        let Id = 0;
+        let Name = $('#txtName').val();
+        let EmpId = $('#txtEmpId').val();
+        let UserId = $('#txtUserId').val();
+        let Passwords = $('#txtpassword').val();
+        let Status = $('#txtstatus').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/User/SaveUser',
+            dataType: 'json',
+            data: { Id, Name, EmpId, UserId, Passwords, Status },
+            success: function (data) {
+                if (data > 0) {
+                    alert("Record saved successfully.");
+                    GetUser();
+                    ClearInput();
+                } else {
+                    alert("Failed to save.");
+                }
+            }
+        });
+    }
+
+    function GetUser() {
+        $('#tdata').empty();
+        $.ajax({
+            type: 'GET',
+            url: '/User/GetUser',
+            dataType: 'json',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var items = "<tr><td>" + data[i].Id + "</td><td>" + data[i].Name + "</td><td>" + data[i].EmpId + "</td><td>" + data[i].UserId + "</td><td>" + data[i].Passwords + "</td><td>" + data[i].Status + "</td><td><button onclick='EditUser(" + data[i].Id + ")'>Edit</button></td></td><td><button onclick='DeleteUser(" + data[i].Id + ")'>delete</button></td></tr>"
+                    $('#tdata').append(items);
+                }
+            }
+        });
+    }
+
+    function EditUser(Id) {
+        $.ajax({
+            type: 'GET',
+            url: '/User/EditUser',
+            dataType: 'json',
+            data: { Id: Id },
+            success: function (data)
+            {
+                $('#txtId').val(data.Id);
+                $('#txtName').val(data.Name);
+                $('#txtEmpId').val(data.EmpId);
+                $('#txtUserId').val(data.UserId);
+                $('#txtpassword').val(data.Passwords);
+                $('#txtstatus').val(data.Status);
+            }
+        });
+    }
+
+    function UpdateUser() {
+        if (confirm("are you sure to update this data"))
+            {
+
+            let Id = $('#txtId').val();
+            let Name = $('#txtName').val();
+            let EmpId = $('#txtEmpId').val();
+            let UserId = $('#txtUserId').val();
+            let Passwords = $('#txtpassword').val();
+            let Status = $('#txtstatus').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/User/UpdateUser',
+                dataType: 'json',
+                data: { Id, Name, EmpId, UserId, Passwords, Status },
+                success: function (data)
+                {
+                    if (data > 0)
+                    {
+                        alert("Record updated successfully.");
+                        GetUser();
+                        ClearInput();
+                    } else {
+                        alert("Update failed.");
+                    }
+                }
+            });
+        }
+    }
+
+    function DeleteUser(Id) {
+        if (confirm("Are you sure you want to delete this user?"))
+        {
+            $.ajax({
+                type: 'POST',
+                url: '/User/DeleteUser',
+                dataType: 'json',
+                data: { Id: Id },
+                success: function (data) {
+                    if (data > 0) {
+                        alert("Record deleted successfully.");
+                        GetUser();
+                    } else {
+                        alert("Delete failed.");
+                    }
+                }
+            });
+        }
+    }
+    function ClearInput() {
+        $('#txtId').val('');
+        $('#txtName').val('');
+        $('#txtEmpId').val('');
+        $('#txtUserId').val('');
+        $('#txtpassword').val('');
+        $('#txtstatus').val('');
+
+    }
+</script>
+
+
+
+
+

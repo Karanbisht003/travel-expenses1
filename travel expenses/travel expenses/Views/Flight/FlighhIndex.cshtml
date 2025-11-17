@@ -1,0 +1,173 @@
+﻿
+@{
+    ViewBag.Title = "FlighhIndex";
+}
+
+<h2>FlighhIndex</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
+</script>
+
+
+
+<label>Id</label>
+<br />
+<input type="text" id="txtId" placeholder="Id" disabled />
+<br />
+<label>TicketId</label>
+<br />
+<input type="tel" id="txtTicketId" placeholder="TicketId" />
+<br />
+<label>TripId</label>
+<br />
+<input type="text" id="txtTripId" placeholder="TripId" />
+<br />
+<label>DeparturePlace</label>
+<br />
+<input type="text" id="txtDeparturePlace" placeholder="DeparturePlace" />
+<br />
+<label>ArrivalPlace</label>
+<br />
+<input type="text" id="txtArrivalPlace" placeholder="ArrivalPlace" />
+<br />
+<label>Type</label>
+<br />
+<input type="text" id="txtType" placeholder="Type" />
+<br />
+<label>Time</label>
+<br />
+<input type="text" id="txtTime" placeholder="Time" />
+<br />
+<label>Amount</label>
+<br />
+<input type="text" id="txtAmount" placeholder="Amount" />
+<br />
+<button type="submit" id="btnsave" onclick="SaveFlightData()">savedata</button>
+
+<br />
+<button type="submit" id="btnupdate" onclick="UpdateData()">Update</button>
+<br />
+<button type="submit" id="btnGet" onclick="GetData()">GetData</button>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>ticketid</th>
+            <th>TripId</th>
+            <th>DeparturePlace</th>
+            <th>ArrivalPlace</th>
+            <th>Type</th>
+            <th>time</th>
+            <th>amount+</th>
+            <th>button</th>
+        </tr>
+
+    </thead>
+    <tbody id="tdata"></tbody>
+</table>
+<script>
+    function SaveFlightData() {
+
+        let Id = $('#txtId').val();
+        let TicketId = $('#txtTicketId').val();
+        let TripId = $('#txtTripId').val();
+        let DeparturePlace = $('#txtDeparturePlace').val();
+        let ArrivalPlace = $('#txtArrivalPlace').val();
+        let Type = $('#txtType').val();
+        let Time = $('#txtTime').val();
+        let Amount = $('#txtAmount').val();
+        $.ajax({
+            type: 'GET',
+            url: '/Flight/SaveFlight',
+            datatype: 'Json',
+            data: { Id, TicketId, TripId, DeparturePlace, ArrivalPlace, Type, Time,Amount },
+            success: function data() {
+                if (data > 0) {
+                    alert("savedata");
+                }
+            }
+
+
+        })
+    }
+    function GetData()
+    {
+        $('#tdata').empty();
+        $.ajax({
+            type: 'GET',
+            url: '/Flight/FlightGet',
+            datatype: 'Json',
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+
+                    let items = "<tr><td>" + data[i].Id + "</td><td>" + data[i].TicketId + "</td><td>" + data[i].TripId + "</td><td>" + data[i].DeparturePlace + "</td><td>" + data[i].ArrivalPlace + "</td><td>" + data[i].Type + "</td><td>" + data[i].Time + "</td><td>" + data[i].Amount + "</td><td><button onclick='EditFlight(" + data[i].Id + ")'>Edit</button></td></td><td><button onclick='DeleteFlight(" + data[i].Id + ")'>delete</button></td></tr>"
+                    $('#tdata').append(items);
+
+                }
+            }
+        })
+
+    }
+    function EditFlight(Id)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Flight/EditFlight',
+            datatype: 'Json',
+            data: { Id: Id },
+            success: function (data) {
+                $('#txtId').val(data.Id);
+                $('#txtTicketId').val(data.TicketId);
+                $('#txtTripId').val(data.TripId);
+                $('#txtDeparturePlace').val(data.DeparturePlace);
+                $('#txtArrivalPlace').val(data.ArrivalPlace);
+                $('#txtType').val(data.Type);
+                $('#txtTime').val(data.Time);
+                $('#txtAmount').val(data.Amount);
+
+            }
+        })
+    }
+
+    function UpdateData() {
+        let Id = $('#txtId').val();
+        let TicketId = $('#txtTicketId').val();
+        let TripId = $('#txtTripId').val();
+        let DeparturePlace = $('#txtDeparturePlace').val();
+        let ArrivalPlace = $('#txtArrivalPlace').val();
+        let Type = $('#txtType').val();
+        let Time = $('#txtTime').val();
+        let Amount = $('#txtAmount').val();
+        $.ajax({
+            type: 'POST',
+            url: '/Flight/UpdateFlight',
+            datatype: 'Json',
+            data: { Id, TicketId, TripId, DeparturePlace, ArrivalPlace, Type, Time, Amount },
+            success: function (data) {
+                if (data > 0) {
+                    alert("update");
+                }
+            }
+
+
+        })
+    }
+    function DeleteFlight(Id) {
+        $.ajax({
+
+            type: 'GET',
+            url: '/Flight/deleteFlight',
+            datatype: 'Json',
+            data: { Id: Id },
+            success: function (data) {
+                if (data > 0) {
+                    alert("delete Record");
+                }
+            }
+
+        })
+
+    }
+</script>
+

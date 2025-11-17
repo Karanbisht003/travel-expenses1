@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = "UserIndex";
+}
+
+<h2>UserIndex</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<lable>Id</lable>
+<br>
+<input type="text" id="txtId" placeholder="id"disabled />
+<br>
+<lable>Name</lable>
+<br>
+<input type="text" id="txtName" placeholder="Name" />
+<br>
+<lable>EmpId</lable>
+<br>
+<input type="text" id="txtEmpId" placeholder="EmpId" />
+<br>
+<lable>UserId</lable>
+<br>
+<input type="text" id="txtUserId" placeholder="UserId" />
+
+<br>
+<lable>password</lable>
+<br>
+<input type="text" id="txtpassword" placeholder="password" />
+
+<br>
+<lable>status</lable>
+<br>
+<input type="text" id="txtstatus" placeholder="status" />
+
+<button type="submit" id="btnsave" onclick="SaveData()">Submit</button>
+<button type="submit" id="btnUpdate" onclick="UpdateUser()">Update</button>
+<br>
+<button type="submit" id="btnGet" onclick="GetUser()">GetUserData</button>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>EmpId</th>
+            <th>UserId</th>
+            <th>Password</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody id="tdata"></tbody>
+</table>
+<script>
+    function SaveData() {
+        let Id = 0; /*$('#txtId').val();*/
+        let Name = $('#txtName').val();
+        let EmpId = $('#txtEmpId').val();
+        let UserId = $('#txtUserId').val();
+        let Passwords = $('#txtpassword').val();
+        let Status = $('#txtstatus').val();
+        $.ajax({
+            type: 'GET',
+            url: '/User/SaveUser',
+            datatype: 'Json',
+            data: { Id, Name, EmpId, UserId, Passwords, Status },
+            success: function (data) {
+                if (data > 0) {
+                    alert("record Save");
+                }
+
+            }
+
+        });
+
+    }
+    function GetUser()
+    {
+        $('#tdata').empty();
+        $.ajax({
+            
+                type: 'GET',
+                url: '/User/GetUser',
+                datatype: 'Json',
+                success: function (data)
+                {
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        var items = "<tr><td>" + data[i].Id + "</td><td>" + data[i].Name + "</td><td>" + data[i].EmpId + "</td><td>" + data[i].UserId + "</td><td>" + data[i].Passwords + "</td><td>" + data[i].Status + "</td><td><button onclick='EditUSer(" + data[i].Id + ")'>Edit</button></td></td><td><button onclick='Userdeletedata(" + data[i].Id + ")'>delete</button></td></tr>"
+                        $('#tdata').append(items);
+
+                    }
+
+
+                }
+        })
+    }
+    function EditUSer(Id) {
+        $.ajax({
+            type: 'GET',
+            url: '/User/EditUser',
+            datatype: 'Json',
+            data: { id: Id },
+            success: function (data) {
+
+               $('#txtId').val(data.Id);
+                $('#txtName').val(data.Name);
+                $('#txtEmpId').val(data.EmpId);
+               $('#txtUserId').val(data.UserId);
+                 $('#txtpassword').val(data.Passwords);
+                $('#txtstatus').val(data.Status);
+            }
+        })
+    }
+    function UpdateUser() {
+        let Id = $('#txtId').val();
+        let Name = $('#txtName').val();
+        let EmpId = $('#txtEmpId').val();
+        let UserId = $('#txtUserId').val();
+        let Passwords = $('#txtpassword').val();
+        let Status = $('#txtstatus').val();
+        $.ajax({
+            type: 'GET',
+            url: '/User/updateUser',
+            datatype: 'Json',
+            data: { Id,Name, EmpId, UserId, Passwords, Status },
+            success: function (data) {
+                if (data > 0) {
+                    alert("record Update");
+                }
+
+            }
+
+        })
+    }
+
+</script>
+
+
+
+

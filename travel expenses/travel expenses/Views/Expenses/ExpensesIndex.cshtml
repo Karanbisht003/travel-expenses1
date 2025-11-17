@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewBag.Title = "ExpensesIndex";
+}
+
+<h2>ExpensesIndex</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script src="~/Scripts/comman.js"></script>
+
+<label>ExpensesId</label>
+<br />
+<input type="text" id="txtId" placeholder="ExpensesId" disabled />
+<br />
+<label>FromDate</label>
+<br />
+<input type="datetime-local" id="txtFromDate" placeholder="FromDate" />
+<br />
+<label>ToDate</label>
+<br />
+<input type="datetime-local" id="txtToDate" placeholder="ToDate" />
+<br />
+<label>Address</label>
+<br />
+<input type="text" id="txtAddress" placeholder="Address" />
+<br />
+<label>CompanyName</label>
+<br />
+<input type="text" id="txtCompanyName" placeholder="CompanyName" />
+<br />
+<label>AdvancePayment</label>
+<br />
+<input type="text" id="txtAdvancePayment" placeholder="AdvancePayment" />
+<br />
+<label>Puspose</label>
+<br />
+<input type="text" id="txtPuspose" placeholder="Puspose" />
+<br />
+<button type="submit" id="btnsave" onclick="SaveData()">savedata</button>
+
+<br />
+<button type="submit" id="btnupdate" onclick="UpdateData()">Update</button>
+<br />
+<button type="submit" id="btnGet" onclick="GetData()">GetData</button>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>ExpensesId</th>
+            <th>FromDate</th>
+            <th>ToDate</th>
+            <th>Address</th>
+            <th>CompanyName</th>
+            <th>AdvancePayment</th>
+            <th>Puspose</th>
+            <th>button</th>
+        </tr>
+
+    </thead>
+    <tbody id="tdata"></tbody>
+</table>
+<script>
+    function SaveData() {
+        let ExpensesId = $('#txtId').val();
+        let FromDate = $('#txtFromDate').val();
+        let ToDate = $('#txtToDate').val();
+        let Address = $('#txtAddress').val();
+        let CompanyName = $('#txtCompanyName').val();
+        let AdvancePayment = $('#txtAdvancePayment').val();
+        let Puspose = $('#txtPuspose').val();
+        $.ajax({
+            type: 'GET',
+            url: '/Expenses/SaveExpeense',
+            datatype: 'Json',
+            data: { ExpensesId, FromDate, ToDate, Address, CompanyName, AdvancePayment, Puspose },
+            success: function data() {
+                if (data > 0) {
+                    alert("savedata");
+                }
+            }
+
+
+        })
+    }
+    function GetData() {
+        $('#tdata').empty();
+        $.ajax({
+            type: 'GET',
+            url: '/Expenses/GetExpenses',
+            datatype: 'Json',
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+
+                    let items = "<tr><td>" + data[i].ExpensesId + "</td><td>" + ConvertJsonDateString(data[i].FromDate) + "</td><td>" + ConvertJsonDateString(data[i].ToDate) + "</td><td>" + data[i].Address + "</td><td>" + data[i].CompanyName + "</td><td>" + data[i].AdvancePayment + "</td><td>" + data[i].Puspose + "</td><td><button onclick='EditExpenses(" + data[i].ExpensesId + ")'>Edit</button></td></td><td><button onclick='DeleteExpenses(" + data[i].ExpensesId + ")'>delete</button></td></tr>"
+                    $('#tdata').append(items);
+
+                }
+            }
+        })
+
+    }
+    function EditExpenses(ExpensesId) {
+        $.ajax({
+            type: 'GET',
+            url: '/Expenses/EditExpenses',
+            datatype: 'Json',
+            data: { ExpensesId: ExpensesId },
+            success: function (data) {
+                $('#txtId').val(data.ExpensesId);
+                $('#txtFromDate').val(ConvertJsonDateForInput(data.FromDate));
+                $('#txtToDate').val(ConvertJsonDateForInput(data.ToDate));
+                $('#txtAddress').val(data.Address);
+                $('#txtCompanyName').val(data.CompanyName);
+                $('#txtAdvancePayment').val(data.AdvancePayment);
+                $('#txtPuspose').val(data.Puspose);
+
+            }
+        })
+    }
+    function UpdateData()
+    {
+        let ExpensesId = $('#txtId').val();
+        let FromDate = $('#txtFromDate').val();
+        let ToDate = $('#txtToDate').val();
+        let Address = $('#txtAddress').val();
+        let CompanyName = $('#txtCompanyName').val();
+        let AdvancePayment = $('#txtAdvancePayment').val();
+        let Puspose = $('#txtPuspose').val();
+        $.ajax({
+            type: 'POST',
+            url: '/Expenses/updateExpenses',
+            datatype: 'Json',
+            data: { ExpensesId, FromDate, ToDate, Address, CompanyName, AdvancePayment, Puspose },
+            success: function (data) {
+                if (data > 0) {
+                    alert("update");
+                }
+            }
+
+
+        })
+    }
+    function DeleteExpenses(ExpensesId) {
+        $.ajax({
+            type: 'GET',
+            url: '/Expenses/DeleteExpenses',
+            datatype: 'Json',
+            data: { ExpensesId: ExpensesId },
+            success: function (data) {
+                if (data > 0) {
+                    alert("delete Record");
+                }
+            }
+
+        })
+
+    }
+</script>

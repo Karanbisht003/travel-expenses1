@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewBag.Title = "LoginIndex";
+}
+
+<h2>LoginIndex</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .login-box input, .login-box button {
+                width: 100%;
+                padding: 10px;
+                margin-top: 10px;
+            }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h2>Login</h2>
+        <input type="text" id="name" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="loginBtn">Login</button>
+        <div class="error" id="errorMessage"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#loginBtn').click(function () {
+                const name = $('#name').val();
+                const password = $('#password').val();
+                const error = $('#errorMessage');
+
+                if (name === "" || password === "") {
+                    error.text("Please fill all fields.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '/Login/Login',
+                    type: 'POST',
+                    data: {
+                        Name: name,
+                        Password: password
+                    },
+                    success: function (response) {
+                        if (response.includes("UserIndex")) {
+                            
+                            window.location.href = "/User/UserIndex";
+                        } else {
+                            error.text("Invalid credentials or login failed.");
+                        }
+                    },
+                    error: function () {
+                        error.text("passwords incorrect");
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

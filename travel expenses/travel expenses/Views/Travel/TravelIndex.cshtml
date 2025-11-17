@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "TravelIndex";
+}
+<div style="text-align:center;
+color:black">
+   
+<h1 class="title">Hello My Travelers</h1>
+</div>
+    
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Live Date & Time</title>
+</head>
+<body>
+
+    <h2 style="text-align: right; font-size:15px;"> Date & Time</h2>
+    <p id="datetime" style="text-align: right; font-size: 15px; font-weight: bold;"></p>
+
+
+
+    <div style="text-align:center ;
+   color:blue">
+        <h2>Choose  YOUR Travel  details 🧳✈️🌍</h2>
+    </div>
+    <style>
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+        }
+
+        .button-box {
+            flex: 1 1 30%;
+            text-align: center;
+        }
+
+            .button-box button {
+                width: 100%;
+                padding: 15px;
+                font-size: 16px;
+                font-weight: bold;
+                border: none;
+                background-color: #4CAF50;
+                color: white; 
+                border-radius: 8px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+
+                .button-box button:hover {
+                    background-color: #45a049;
+                }
+    </style>
+
+    <div class="button-container">
+        <div class="button-box">
+            <button onclick="location.href='@Url.Action("FlightIndex", "Flight")'">
+                ✈️ Flight Booking
+            </button>
+        </div>
+        <div class="button-box">
+            <button onclick="location.href='@Url.Action("BusIndex", "Bus")'">
+                🚌 Bus Booking
+            </button>
+        </div>
+        <div class="button-box">
+            <button onclick="location.href='@Url.Action("TrainIndex", "Train")'">
+                🚆 Train Booking
+            </button>
+        </div>
+        <div class="button-box">
+            <button onclick="location.href='@Url.Action("ExpensesIndex", "Expenses")'">
+                💰 Expenses
+            </button>
+        </div>
+        <div class="button-box">
+            <button onclick="location.href='@Url.Action("UserIndex", "User")'">
+                👤 User Details
+            </button>
+        </div>
+        <div class="button-box">
+            <button onclick="location.href='@Url.Action("OtherIndex", "Other")'">
+                📦 Other Bookings
+            </button>
+        </div>
+    </div>
+    <script>
+        function showDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'long', year: 'numeric', month: 'long',
+                day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+            };
+            document.getElementById("datetime").innerHTML = now.toLocaleString('en-IN', options);
+        }
+
+        // Update every second
+        setInterval(showDateTime, 1000);
+        showDateTime(); // Call once immediately
+    </script>
+
+</body>
+</html>
+
+
